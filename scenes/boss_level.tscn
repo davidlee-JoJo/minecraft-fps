@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlevel006"]
+
+[ext_resource type="Script" path="res://scripts/game/level.gd" id="1"]
+
+[node name="BossLevel" type="Node3D"]
+script = ExtResource("1")
+level_index = 5
+level_name = "魔王競技場"
+is_boss_level = true

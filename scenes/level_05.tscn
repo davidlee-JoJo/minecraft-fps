@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlevel005"]
+
+[ext_resource type="Script" path="res://scripts/game/level.gd" id="1"]
+
+[node name="Level5" type="Node3D"]
+script = ExtResource("1")
+level_index = 4
+level_name = "終界 The End"
+is_boss_level = false

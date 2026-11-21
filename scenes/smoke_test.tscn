@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1smoketest"]
+
+[ext_resource type="Script" path="res://scripts/game/game_manager.gd" id="1"]
+
+[node name="SmokeTest" type="Node3D"]
+
+[node name="Label" type="Label" parent="."]
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 600.0
+offset_bottom = 120.0
+text = "Smoke test OK"

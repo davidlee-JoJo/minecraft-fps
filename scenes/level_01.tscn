@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlevel001"]
+
+[ext_resource type="Script" path="res://scripts/game/level.gd" id="1"]
+
+[node name="Level1" type="Node3D"]
+script = ExtResource("1")
+level_index = 0
+level_name = "草原 Plains"
+is_boss_level = false

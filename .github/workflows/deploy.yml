@@ -1,0 +1,70 @@
+name: Build & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Godot editor
+        run: |
+          mkdir -p "$HOME/godot"
+          curl -fsSL -o "$HOME/godot/godot.zip" \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q "$HOME/godot/godot.zip" -d "$HOME/godot"
+          chmod +x "$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          echo "GODOT_BIN=$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> "$GITHUB_ENV"
+
+      - name: Download export templates
+        run: |
+          curl -fsSL -o "$HOME/godot/templates.tpz" \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          unzip -q "$HOME/godot/templates.tpz" -d "$HOME/godot/tpl"
+          mv "$HOME/godot/tpl/templates" "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+
+      - name: Import project
+        run: |
+          "$GODOT_BIN" --headless --path . --import || true
+
+      - name: Export web build
+        run: |
+          mkdir -p build/web
+          "$GODOT_BIN" --headless --path . --export-release "Web" "build/web/index.html"
+
+      - name: Add .nojekyll
+        run: touch build/web/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
