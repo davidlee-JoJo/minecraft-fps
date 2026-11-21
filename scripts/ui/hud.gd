@@ -47,7 +47,7 @@ func _ready() -> void:
 	_hit_marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_hit_marker)
 
-	var font := ThemeDB.fallback_font
+	var font: Font = load("res://assets/fonts/kaiu.ttf")
 
 	_level_label = _make_label(font, 22, Color.WHITE)
 	_level_label.position = Vector2(24, 16)
